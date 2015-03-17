@@ -698,7 +698,7 @@ Theorem plus_id_example : forall n m:nat,
 Proof.
   intros n m.   (* move both quantifiers into the context *)
   intros H.     (* move the hypothesis into the context *)
-  rewrite -> H. (* Rewrite the goal using the hypothesis *)
+  rewrite H. (* Rewrite the goal using the hypothesis *)
   reflexivity.  Qed.
 
 (** The first line of the proof moves the universally quantified
@@ -720,7 +720,13 @@ Proof.
 Theorem plus_id_exercise : forall n m o : nat,
   n = m -> m = o -> n + m = m + o.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m o.
+  intros H.
+  intros H2.
+  rewrite H.
+  rewrite <- H2.
+  reflexivity.
+ Qed.
 (** [] *)
 
 (** As we've seen in earlier examples, the [Admitted] command
@@ -750,7 +756,12 @@ Theorem mult_S_1 : forall n m : nat,
   m = S n -> 
   m * (1 + n) = m * m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m H.
+  replace (1+n) with (S n).
+  rewrite H.
+  reflexivity.
+  reflexivity.
+ Qed.
 (** [] *)
 
 
@@ -790,7 +801,7 @@ Abort.
 Theorem plus_1_neq_0 : forall n : nat,
   beq_nat (n + 1) 0 = false.
 Proof.
-  intros n. destruct n as [| n'].
+  intros n. destruct n.
     reflexivity.
     reflexivity.  Qed.
 
@@ -835,7 +846,12 @@ Proof.
 Theorem zero_nbeq_plus_1 : forall n : nat,
   beq_nat 0 (n + 1) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  destruct n.
+  simpl.
+  reflexivity.
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -851,7 +867,14 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros f.
+  intros H.
+  intros b.
+  rewrite H.
+  rewrite H.
+  reflexivity.
+Qed.
+ 
 
 (** Now state and prove a theorem [negation_fn_applied_twice] similar
     to the previous one but where the second hypothesis says that the
@@ -870,7 +893,18 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c.
+  destruct b.
+  simpl.
+  intros H.
+  rewrite H.
+  reflexivity.
+  simpl.
+  intros H2.
+  rewrite H2.
+  reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** Exercise: 3 stars (binary)  *)
@@ -982,4 +1016,3 @@ Fixpoint plus' (n : nat) (m : nat) : nat :=
 (** [] *)
 
 (** $Date: 2014-12-31 15:31:47 -0500 (Wed, 31 Dec 2014) $ *)
-
