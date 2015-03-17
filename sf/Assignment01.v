@@ -3,7 +3,7 @@
 (** Assignment 01 *)
 (** Due: 2015/03/19 14:00 *)
 
-Definition admit {T: Type} : T.  Admitted.
+Definition admit {T: Type} : T. Admitted.
 
 (** **** Problem #1 : 1 star (andb3) *)
 (** Do the same for the [andb3] function below. This function should
@@ -11,16 +11,19 @@ Definition admit {T: Type} : T.  Admitted.
     otherwise. *)
 
 Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool :=
-  (* FILL IN HERE *) admit.
+  match b1, b2, b3 with
+  | true, true, true => true
+  | _, _, _ => false
+  end.
 
 Example test_andb31:                 (andb3 true true true) = true.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 Example test_andb32:                 (andb3 false true true) = false.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 Example test_andb33:                 (andb3 true false true) = false.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 Example test_andb34:                 (andb3 true true false) = false.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 (** [] *)
 
 
@@ -41,12 +44,15 @@ Eval compute in 3 * 5.
 Eval compute in 3+5*6.
 
 Fixpoint factorial (n:nat) : nat := 
-(* FILL IN HERE *) admit.
+  match n with
+  | 0 => 1
+  | S p => n*factorial(p)
+  end.
 
 Example test_factorial1:          (factorial 3) = 6.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 Example test_factorial2:          (factorial 5) = 10 * 12.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 (** [] *)
 
 
@@ -55,13 +61,22 @@ Example test_factorial2:          (factorial 5) = 10 * 12.
 (** The [blt_nat] function tests [nat]ural numbers for [l]ess-[t]han,
     yielding a [b]oolean.  Use [Fixpoint] to define it. *)
 
-Definition blt_nat (n m : nat) : bool :=
-  (* FILL IN HERE *) admit.
+Fixpoint blt_nat (n m : nat) : bool :=
+  match n with
+  | O => match m with
+         | O => false
+         | S m' => true
+         end
+  | S n' => match m with
+            | O => false
+            | S m' => blt_nat n' m'
+            end
+  end.
 
 Example test_blt_nat1:             (blt_nat 2 2) = false.
-(* FILL IN HERE *) Admitted.
+reflexivity. Qed.
 Example test_blt_nat2:             (blt_nat 2 4) = true.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 Example test_blt_nat3:             (blt_nat 4 2) = false.
-(* FILL IN HERE *) Admitted.
+(* FILL IN HERE *) reflexivity. Qed.
 (** [] *)
