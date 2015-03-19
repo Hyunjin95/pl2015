@@ -107,7 +107,17 @@ Qed.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c.
+  intros H.
+  destruct c.
+  Case "c = true".
+  reflexivity.
+  Case "c = false".
+  rewrite <- H.
+  destruct b.
+  reflexivity.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** There are no hard and fast rules for how proofs should be
@@ -224,24 +234,47 @@ Proof.
 Theorem mult_0_r : forall n:nat,
   n * 0 = 0.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  reflexivity.
+  simpl.
+  rewrite IHn.
+  reflexivity.
+Qed.
 
 Theorem plus_n_Sm : forall n m : nat, 
   S (n + m) = n + (S m).
 Proof. 
-  (* FILL IN HERE *) Admitted.
-
+  intros n m.
+  induction n.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHn.
+  reflexivity.
+Qed.
 
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  intros n m.
+  induction n.
+  auto.
+  simpl.
+  rewrite IHn.
+  auto.
+Qed.
 
 Theorem plus_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  induction n.
+  auto.
+  simpl.
+  rewrite IHn.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars (double_plus)  *)
@@ -258,7 +291,13 @@ Fixpoint double (n:nat) :=
 
 Lemma double_plus : forall n, double n = n + n .
 Proof.  
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  auto.
+  simpl.
+  rewrite IHn.
+  auto.
+Qed.
 (** [] *)
 
 
@@ -328,11 +367,20 @@ Theorem plus_rearrange_firsttry : forall n m p q : nat,
   (n + m) + (p + q) = (m + n) + (p + q).
 Proof.
   intros n m p q.
+  assert (H: n + m = m + n).
+  Case "Proof of Assertion".
+    induction n.
+    auto.
+    simpl.
+    rewrite IHn.
+    auto.
+    rewrite H.
+    reflexivity.
+Qed.
   (* We just need to swap (n + m) for (m + n)...
      it seems like plus_comm should do the trick! *)
-  rewrite -> plus_comm.
+  
   (* Doesn't work...Coq rewrote the wrong plus! *)
-Abort.
 
 (** To get [plus_comm] to apply at the point where we want it, we can
     introduce a local lemma stating that [n + m = m + n] (for
@@ -356,28 +404,87 @@ Proof.
 Theorem plus_swap : forall n m p : nat, 
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
-
+  intros.
+  induction n.
+  simpl. reflexivity. simpl. rewrite <- plus_n_Sm. rewrite IHn. auto.
+Qed.
 (** Now prove commutativity of multiplication.  (You will probably
     need to define and prove a separate subsidiary theorem to be used
     in the proof of this one.)  You may find that [plus_swap] comes in
     handy. *)
 
+Theorem mult_1 : forall n : nat,
+ n * 1 = n.
+Proof.
+  induction n.
+  auto.
+  simpl.
+  rewrite IHn.
+  auto.
+Qed.
+
+Theorem mult_0 : forall n : nat,
+ n * 0 = 0.
+Proof.
+  induction n.
+  auto.
+  simpl. rewrite IHn. auto.
+Qed.
+
+Theorem mult_mn : forall m n : nat,
+  n * (S m) = n + n * m.
+Proof.
+  intros m n.
+  generalize dependent m.
+  induction n.
+  auto.
+  simpl.
+  intros m.
+  rewrite IHn.
+  rewrite plus_swap.
+  auto.
+Qed.
+
 Theorem mult_comm : forall m n : nat,
  m * n = n * m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  auto.
+  simpl.
+  intros n0.
+  rewrite mult_mn.
+  auto.
+Qed.
+  
 (** [] *)
 
 (** **** Exercise: 2 stars, optional (evenb_n__oddb_Sn)  *)
 
 (** Prove the following simple fact: *)
 
+Theorem negb_bool : forall n m : bool,
+  n = negb m -> negb n = m.
+  intros n m.
+  intros H.
+  destruct m.
+  rewrite H.
+  auto.
+  rewrite H.
+  auto.
+Qed.
+
 Theorem evenb_n__oddb_Sn : forall n : nat,
   evenb n = negb (evenb (S n)).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction n.
+  auto.
+  apply negb_bool in IHn.
+  rewrite <- IHn.
+  simpl.
+  auto.
+Qed.
+
 (** [] *)
 
 (* ###################################################################### *)
@@ -395,31 +502,58 @@ Proof.
 Theorem ble_nat_refl : forall n:nat,
   true = ble_nat n n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  auto.
+  auto.
+Qed.
 
 Theorem zero_nbeq_S : forall n:nat,
   beq_nat 0 (S n) = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  auto.
+  auto.
+Qed.
 
 Theorem andb_false_r : forall b : bool,
   andb b false = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b.
+  destruct b.
+  auto.
+  auto.
+Qed.
 
 Theorem plus_ble_compat_l : forall n m p : nat, 
   ble_nat n m = true -> ble_nat (p + n) (p + m) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  intros H.
+  induction p.
+  auto.
+  simpl.
+  auto.
+Qed.  
 
 Theorem S_nbeq_0 : forall n:nat,
   beq_nat (S n) 0 = false.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  auto.
+  auto.
+Qed.
 
 Theorem mult_1_l : forall n:nat, 1 * n = n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n.
+  induction n.
+  auto.
+  simpl.
+  auto.
+Qed.
 
 Theorem all3_spec : forall b c : bool,
     orb
@@ -428,12 +562,39 @@ Theorem all3_spec : forall b c : bool,
                (negb c))
   = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros b c.
+  destruct c.
+  destruct b.
+  auto.
+  auto.
+  destruct b.
+  auto.
+  auto.
+Qed.
 
 Theorem mult_plus_distr_r : forall n m p : nat,
   (n + m) * p = (n * p) + (m * p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros n m p.
+  induction p.
+  rewrite mult_0.
+  rewrite mult_0.
+  rewrite mult_0.
+  auto.
+  rewrite mult_mn.
+  rewrite mult_mn.
+  rewrite mult_mn.
+  rewrite <- plus_swap.
+  rewrite plus_assoc.
+  rewrite plus_assoc.
+  rewrite IHp.
+  assert (H: n + m = m + n).
+  rewrite plus_comm.
+  auto.
+  rewrite H.
+  rewrite plus_assoc.
+  auto.
+Qed.
 
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
