@@ -599,7 +599,12 @@ Qed.
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction n.
+  simpl. auto.
+  simpl. rewrite IHn. rewrite mult_plus_distr_r.
+  auto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, optional (beq_nat_refl)  *)
@@ -612,7 +617,10 @@ problem using the theorem no matter which way we state it. *)
 Theorem beq_nat_refl : forall n : nat, 
   true = beq_nat n n.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction n.
+  auto. simpl. auto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, optional (plus_swap')  *)
@@ -630,7 +638,21 @@ Proof.
 Theorem plus_swap' : forall n m p : nat, 
   n + (m + p) = m + (n + p).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  replace (n + (m + p)) with (n + m + p).
+  replace (m + (n + p)) with (m + n + p).
+  replace (n + m) with (m + n).
+  auto.
+  induction n.
+  auto.
+  simpl. rewrite <- IHn. auto.
+  induction m.
+  auto.
+  simpl. rewrite IHm. auto.
+  induction n.
+  auto. simpl. rewrite IHn. auto.
+Qed.
+  
 (** [] *)
 
 
