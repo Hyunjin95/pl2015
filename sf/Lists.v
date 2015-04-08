@@ -803,7 +803,7 @@ Proof.
 
 Theorem app_nil_end : forall l : natlist, 
   l ++ [] = l.   
-Proof.
+Proof. Admitted.
   
 
 
