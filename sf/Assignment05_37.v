@@ -40,13 +40,11 @@ Theorem le_ble_nat : forall n m,
 Proof.
   (* Hint: This may be easiest to prove by induction on [m]. *)
   intros.
-  generalize dependent n.
   induction m.
   intros.
   inversion H.
   simpl.
   reflexivity.
-  intros.
   inversion H.
   simpl.
   apply bleble.
