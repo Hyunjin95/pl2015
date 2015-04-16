@@ -7,7 +7,20 @@ Require Export Assignment05_03.
 Theorem iff_trans : forall P Q R : Prop, 
   (P <-> Q) -> (Q <-> R) -> (P <-> R).
 Proof.
-  (* FILL IN HERE *) admit.
+  intros P Q R.
+  split.
+  inversion H.
+  inversion H0.
+  intros.
+  apply H3.
+  apply H1.
+  apply H5.
+  inversion H.
+  inversion H0.
+  intros.
+  apply H2.
+  apply H4.
+  apply H5.
 Qed.
 
 
