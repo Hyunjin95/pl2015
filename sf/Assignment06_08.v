@@ -15,14 +15,32 @@ Require Export Assignment06_07.
 Lemma app_length : forall (X:Type) (l1 l2 : list X),
   length (l1 ++ l2) = length l1 + length l2. 
 Proof. 
-  (* FILL IN HERE *) admit.
+  intros.
+  induction l1.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHl1.
+  reflexivity.
 Qed.
 
 Lemma appears_in_app_split : forall (X:Type) (x:X) (l:list X),
   appears_in x l -> 
   exists l1, exists l2, l = l1 ++ (x::l2).
 Proof.
-  (* FILL IN HERE *) admit.
+  intros.
+  induction H.
+  exists [].
+  exists l.
+  simpl.
+  reflexivity.
+  inversion IHappears_in.
+  exists (b :: witness).
+  inversion proof.
+  simpl.
+  exists witness0.
+  rewrite <- proof0.
+  reflexivity.
 Qed.
 
 (** Now define a predicate [repeats] (analogous to [no_repeats] in the
@@ -30,7 +48,8 @@ Qed.
    at least one repeated element (of type [X]).  *)
 
 Inductive repeats {X:Type} : list X -> Prop :=
-  (* FILL IN HERE *)
+  | rep_here : forall x l, appears_in x l -> repeats (x::l)
+  | rep_later : forall x l, repeats l -> repeats (x::l)
 .
 
 (** Now here's a way to formalize the pigeonhole principle. List [l2]
@@ -50,7 +69,8 @@ Theorem pigeonhole_principle: forall (X:Type) (l1  l2:list X),
    length l2 < length l1 -> 
    repeats l1.  
 Proof.
-   intros X l1. induction l1 as [|x l1'].
-   (* FILL IN HERE *) admit. admit.
-Qed.
+   Admitted.
+
+
+
 

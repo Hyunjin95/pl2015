@@ -15,7 +15,7 @@ Inductive ex (X:Type) (P : X->Prop) : Prop :=
 (** That is, [ex] is a family of propositions indexed by a type [X]
     and a property [P] over [X].  In order to give evidence for the
     assertion "there exists an [x] for which the property [P] holds"
-    we must actually name a _witness_ -- a specific value [x] -- and
+    we must actually name a _witness_ -- a specific valueb [x] -- and
     then give evidence for [P x], i.e., evidence that [x] has the
     property [P]. 
 
