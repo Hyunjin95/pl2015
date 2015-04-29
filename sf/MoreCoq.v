@@ -995,7 +995,27 @@ Qed.
 Theorem combine_split : forall X Y (l : list (X * Y)) l1 l2,
   split l = (l1, l2) ->
   combine l1 l2 = l.
-Proof. Admitted.
+Proof. 
+  intros X Y l.
+  induction l as [| (x, y) l'].
+  intros.
+  simpl in H.
+  inversion H.
+  simpl.
+  reflexivity.
+  simpl.
+  destruct (split l') as [xs ys].
+  intros.
+  inversion H.
+  simpl.
+  assert (combine xs ys = l').
+  apply IHl'.
+  reflexivity.
+  rewrite H0.
+  reflexivity.
+Qed.
+  
+
 (** [] *)
 
 (** Sometimes, doing a [destruct] on a compound expression (a
@@ -1279,14 +1299,50 @@ Qed.
     things than necessary.  Hint: what property do you need of [l1]
     and [l2] for [split] [combine l1 l2 = (l1,l2)] to be true?)  *)
 
-Definition split_combine_statement : Prop :=
-(* FILL IN HERE *) admit.
+
+Definition split_combine_statement : Prop := forall X Y (l : list (X*Y)) l1 l2,
+  length l1 = length l2 -> combine l1 l2 = l -> split l = (l1, l2).
+
 
 Theorem split_combine : split_combine_statement.
 Proof.
-(* FILL IN HERE *) Admitted.
-
-
+  unfold split_combine_statement.
+  intros X Y l.
+  induction l as [| [x y] l'].
+  intros l1 l2 H G.
+  simpl.
+  destruct l1; destruct l2.
+  reflexivity.
+  inversion H.
+  inversion H.
+  inversion G.
+  intros l1 l2 H G.
+  simpl.
+  destruct (split l').
+  simpl.
+  destruct l1; destruct l2.
+  inversion G.
+  inversion H.
+  inversion H.
+  simpl.
+  simpl in G.
+  assert (x = x0).
+  inversion G.
+  reflexivity.
+  assert (y = y0).
+  inversion G.
+  reflexivity.
+  rewrite H0.
+  rewrite H1.
+  assert ((l, l0) = (l1, l2)).
+  apply IHl'.
+  inversion H.
+  reflexivity.
+  inversion G.
+  reflexivity.
+  inversion H2.
+  reflexivity.
+Qed.
 
 (** [] *)
 
