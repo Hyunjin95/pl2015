@@ -9,14 +9,15 @@ Theorem or_distributes_over_and : forall P Q R : Prop,
 Proof.
   intros.
   split.
+  intros.
+  inversion H.
   split.
-  inversion H.
   left.
   apply H0.
+  left.
+  apply H0.
+  split.
   right.
-  apply H0.
-  inversion H.
-  left.
   apply H0.
   right.
   apply H0.

@@ -733,6 +733,122 @@ Definition de_morgan_not_and_not := forall P Q:Prop,
 Definition implies_to_or := forall P Q:Prop, 
   (P->Q) -> (~P\/Q). 
 
+Theorem my_th0 : 
+  peirce -> classic.
+Proof.
+  unfold peirce.
+  unfold classic.
+  unfold not.
+  intros.
+  apply H with (P := P) (Q := False).
+  intros.
+  assert (False -> P).
+  intros.
+  inversion H2.
+  apply H2.
+  apply H0.
+  intros.
+  apply H1.
+  apply H3.
+Qed.
+
+Theorem my_th1 :
+  classic -> excluded_middle.
+Proof.
+  unfold classic.
+  unfold excluded_middle.
+  unfold not.
+  intros.
+  apply H.
+  intros.
+  apply H0.
+  right.
+  intros.
+  apply H0.
+  left.
+  apply H1.
+Qed.
+
+Theorem my_th2 :
+  excluded_middle -> de_morgan_not_and_not.
+Proof.
+  unfold excluded_middle.
+  unfold de_morgan_not_and_not.
+  unfold not.
+  intros.
+  assert (P \/ ~ P).
+  apply H.
+  inversion H1.
+  left.
+  apply H2.
+  assert (Q \/ ~Q).
+  apply H.
+  inversion H3.
+  right.
+  apply H4.
+  unfold not in H2.
+  unfold not in H4.
+  assert False.
+  apply H0.
+  split.
+  apply H2.
+  apply H4.
+  inversion H5.
+Qed.
+
+Theorem my_th3 :
+  de_morgan_not_and_not -> implies_to_or.
+Proof.
+  unfold de_morgan_not_and_not.
+  unfold implies_to_or.
+  unfold not.
+  intros.
+  apply H.
+  intros.
+  inversion H1.
+  apply H2.
+  intros.
+  apply H3.
+  apply H0.
+  apply H4.
+Qed.
+
+Theorem my_th4:
+  implies_to_or -> peirce.
+Proof.
+  unfold implies_to_or.
+  unfold peirce.
+  unfold not.
+  intros.
+  assert ((Q -> False) \/ Q).
+  apply H.
+  intros.
+  apply H1.
+  assert ((P -> False) \/ P).
+  apply H.
+  intros.
+  apply H2.
+  inversion H2.
+  apply H0.
+  intros.
+  inversion H1.
+  assert (False -> Q).
+  intros.
+  inversion H6.
+  apply H6.
+  apply H3.
+  apply H4.
+  apply H5.
+  apply H3.
+Qed.
+  
+  
+  
+  
+  
+  
+  
+
 (* FILL IN HERE *)
 (** [] *)
 

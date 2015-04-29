@@ -8,15 +8,14 @@ Theorem orb_prop : forall b c,
   orb b c = true -> b = true \/ c = true.
 Proof.
   intros.
-  destruct b.
+  induction b.
+  left.
+  reflexivity.
   destruct c.
-  left.
-  reflexivity.
-  left.
-  reflexivity.
   right.
-  apply H.
+  reflexivity.
+  left.
+  inversion H.
 Qed.
-
 
 

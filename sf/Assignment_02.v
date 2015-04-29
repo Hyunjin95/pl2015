@@ -6,8 +6,12 @@ Proof.
   intros.
   simpl.
   rewrite H.
-  auto.
+  reflexivity.
 Qed.
+
+
+
+
 
 (** **** Problem #2 : 1 star (zero_nbeq_plus_1) *)
 Fixpoint beq_nat (n m : nat) : bool :=
@@ -27,10 +31,18 @@ Theorem zero_nbeq_plus_1 : forall n : nat,
 Proof.
   intros.
   induction n.
-  auto.
   simpl.
-  auto.
+  reflexivity.
+  simpl.
+  reflexivity.
 Qed.
+(** [] *)
+
+
+
+
+
+
 
 (** **** Problem #3 : 2 stars (boolean functions) *)
 (** Use the tactics you have learned so far to prove the following 
@@ -42,12 +54,22 @@ Theorem negation_fn_applied_twice :
   forall (b : bool), f (f b) = b.
 Proof.
   intros.
+  destruct b eqn:h0.
   rewrite H.
   rewrite H.
-  destruct b.
-  auto.
-  auto.
+  simpl.
+  reflexivity.
+  rewrite H.
+  rewrite H.
+  simpl.
+  reflexivity.
 Qed.
+
+
+
+
+
+
 
 (** **** Problem #4 : 2 stars (andb_eq_orb) *)
 (** Prove the following theorem.  (You may want to first prove a
@@ -59,13 +81,20 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  intros b c.
-  destruct b.
-  destruct c.
-  auto.
-  auto.
-  auto.
+  intros.
+  destruct b eqn:h0.
+  destruct c eqn:h1.
+  reflexivity.
+  inversion H.
+  destruct c eqn:h1.
+  inversion H.
+  reflexivity.
 Qed.
+
+
+
+
+
 
 (** **** Problem #5 : 2 stars (basic_induction) *)
 
@@ -77,11 +106,13 @@ Theorem plus_n_O : forall n : nat,
 Proof. 
   intros.
   induction n.
-  auto.
+  simpl.
+  reflexivity.
   simpl.
   rewrite <- IHn.
   reflexivity.
 Qed.
+
 
 Theorem plus_n_Sm : forall n m : nat, 
   S (n + m) = n + (S m).
@@ -89,7 +120,7 @@ Proof.
   intros.
   induction n.
   simpl.
-  auto.
+  reflexivity.
   simpl.
   rewrite IHn.
   reflexivity.
@@ -100,10 +131,13 @@ Theorem plus_comm : forall n m : nat,
 Proof.
   intros.
   induction n.
-  auto.
+  simpl.
+  rewrite <- plus_n_O.
+  reflexivity.
   simpl.
   rewrite IHn.
-  auto.
+  rewrite plus_n_Sm.
+  reflexivity.
 Qed.
 
 Theorem plus_assoc : forall n m p : nat,
@@ -111,11 +145,16 @@ Theorem plus_assoc : forall n m p : nat,
 Proof.
   intros.
   induction n.
-  auto.
+  simpl.
+  reflexivity.
   simpl.
   rewrite IHn.
-  auto.
+  reflexivity.
 Qed.
+
+
+
+
 
 (** **** Problem #6 : 2 stars (double_plus) *)
 
@@ -130,14 +169,22 @@ Fixpoint double (n:nat) :=
 (** Use induction to prove this simple fact about [double]: *)
 
 Lemma double_plus : forall n, double n = n + n .
-Proof.
+Proof.  
   intros.
   induction n.
-  auto.
+  simpl.
+  reflexivity.
   simpl.
   rewrite IHn.
-  auto.
+  rewrite plus_n_Sm.
+  reflexivity.
 Qed.
+
+
+
+
+
+
 
 (** **** Problem #7 : 4 stars (plus_swap) *)
 (** Use [assert] to help prove this theorem if necessary.  
@@ -147,13 +194,18 @@ Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
   intros.
-  rewrite plus_assoc.
-  rewrite plus_assoc.
-  replace (n + m) with (m + n).
-  auto.
-  rewrite plus_comm.
+  induction n.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHn.
+  rewrite plus_n_Sm.
   reflexivity.
 Qed.
+
+
+
+
 
 (** **** Problem #8 : 3 stars (mult_comm) *)
 
@@ -161,49 +213,33 @@ Theorem mult_plus_distr_r : forall n m p : nat,
   (n + m) * p = (n * p) + (m * p).
 Proof.
   intros.
-  induction p.
-  assert (H: forall n, n * 0 = 0).
-    intros.
-    auto.
-  rewrite H.
-  rewrite H.
-  rewrite H.
-  auto.
-  assert (H2: forall n p, n * (S p) = n + n * p).
-    intros.
-    induction n0.
-    auto.
-    simpl.
-    rewrite IHn0.
-    rewrite plus_swap.
-    auto.
-  rewrite H2.
-  rewrite H2.
-  rewrite H2.
-  rewrite IHp.
+  induction n.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHn.
   rewrite plus_assoc.
-  rewrite plus_assoc.
-  replace (n + m + n * p) with (n + n * p + m).
-  auto.
-  rewrite plus_comm.
-  replace (n + m) with (m + n).
-  rewrite plus_assoc.
-  auto.
-  rewrite plus_comm.
   reflexivity.
 Qed.
+
 
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
 Proof.
   intros.
   induction n.
-  auto.
+  simpl.
+  reflexivity.
   simpl.
   rewrite IHn.
   rewrite mult_plus_distr_r.
   reflexivity.
 Qed.
+
+
+
+
+
 Inductive natprod : Type :=
   pair : nat -> nat -> natprod.
 
@@ -225,20 +261,33 @@ Definition swap_pair (p : natprod) : natprod :=
   | (x,y) => (y,x)
   end.
 
+
+
+
+
+
 (** **** Problem #9 : 1 star (snd_fst_is_swap) *)
 Theorem snd_fst_is_swap : forall (p : natprod),
   (snd p, fst p) = swap_pair p.
 Proof.
   intros.
-  destruct p.
+  induction p.
+  simpl.
   reflexivity.
 Qed.
+
+
+
+
+
 
 (** **** Problem #10 : 1 star, optional (fst_swap_is_snd) *)
 Theorem fst_swap_is_snd : forall (p : natprod),
   fst (swap_pair p) = snd p.
 Proof.
   intros.
-  destruct p.
+  induction p.
+  simpl.
   reflexivity.
 Qed.
+

@@ -16,8 +16,8 @@ Require Export Assignment06_06.
 
 Inductive nostutter:  list nat -> Prop :=
   | nos_0 : nostutter []
-  | nos_1 : forall (x:nat), nostutter [x]
-  | nos_2 : forall (x:nat) (y:nat) (l: list nat), x <> y -> nostutter (y :: l) -> nostutter (x :: y :: l).
+  | nos_1 : forall (n: nat), nostutter [n]
+  | nos_2 : forall (n m: nat) (l : list nat), n <> m -> nostutter l -> nostutter (m::l) -> nostutter (n::m::l).
 
 
 (** Make sure each of these tests succeeds, but you are free
@@ -34,18 +34,35 @@ Inductive nostutter:  list nat -> Prop :=
 
 Example test_nostutter_1:      nostutter [3;1;4;1;5;6].
   Proof. repeat constructor; apply beq_nat_false; auto. Qed.
+(* 
+  
+*)
 
 Example test_nostutter_2:  nostutter [].
+Proof. repeat constructor; apply beq_nat_false; auto. Qed.
+(* 
   Proof. repeat constructor; apply beq_nat_false; auto. Qed.
+*)
 
 Example test_nostutter_3:  nostutter [5].
+Proof. repeat constructor; apply beq_nat_false; auto. Qed.
+(* 
   Proof. repeat constructor; apply beq_nat_false; auto. Qed.
+*)
 
 Example test_nostutter_4:      not (nostutter [3;1;1;4]).
   Proof. intro.
   repeat match goal with 
     h: nostutter _ |- _ => inversion h; clear h; subst 
   end.
+  contradiction H2; auto. Qed.
+(* 
+  Proof. intro.
+  repeat match goal with 
+    h: nostutter _ |- _ => inversion h; clear h; subst 
+  end.
   contradiction H1; auto. Qed.
+*)
+(** [] *)
 
 

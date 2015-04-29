@@ -11,9 +11,9 @@ Proof.
   intros.
   induction n.
   simpl.
-  constructor 1.
+  apply ev_0.
   simpl.
-  constructor 2.
+  apply ev_SS.
   apply IHn.
 Qed.
 (** [] *)

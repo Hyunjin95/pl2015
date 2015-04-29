@@ -8,7 +8,6 @@ Require Export Assignment05_07.
 Theorem double_neg_inf: forall (P: Prop),
   P -> ~~P.
 Proof.
-  intros.
   unfold not.
   intros.
   apply H0.

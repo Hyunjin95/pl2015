@@ -19,8 +19,8 @@ Proof.
   induction H0.
   simpl in H.
   apply H.
-  simpl in H.
   apply IHev.
+  simpl in H.
   inversion H.
   apply pf_evn.
 Qed.

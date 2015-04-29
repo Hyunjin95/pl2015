@@ -9,12 +9,11 @@ Require Export Assignment05_09.
 Theorem not_both_true_and_false : forall P : Prop,
   ~ (P /\ ~P).
 Proof. 
-  intros.
-  unfold not.
-  intros.
-  destruct H.
-  apply H0.
-  apply H.
+   unfold not.
+   intros.
+   inversion H.
+   apply H1.
+   apply H0.
 Qed.
 (** [] *)
 

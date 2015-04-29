@@ -6,9 +6,8 @@ Theorem lt_S : forall n m,
   n < m ->
   n < S m.
 Proof.
-  intros.
   unfold lt.
-  unfold lt in H.
+  intros.
   apply le_S.
   apply H.
 Qed.

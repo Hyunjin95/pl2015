@@ -9,10 +9,9 @@ Require Export Assignment05_00.
 Theorem proj2 : forall P Q : Prop, 
   P /\ Q -> Q.
 Proof.
-  intros P Q.
-  intros H.
-  destruct H.
-  apply H0.
+  intros.
+  inversion H.
+  apply H1.
 Qed.
 (** [] *)
 

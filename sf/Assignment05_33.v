@@ -7,13 +7,8 @@ Theorem le_plus_l : forall a b,
 Proof. 
   intros.
   induction a.
-  induction b.
   simpl.
-  constructor 1.
-  simpl in IHb.
-  simpl.
-  apply le_S.
-  apply IHb.
+  apply O_le_n.
   simpl.
   apply n_le_m__Sn_le_Sm.
   apply IHa.

@@ -8,12 +8,21 @@ Require Export Assignment05_12.
 Theorem beq_nat_false : forall n m,
   beq_nat n m = false -> n <> m.
 Proof.
-  intros.
   unfold not.
+  induction n.
+  simpl.
   intros.
-  rewrite H0 in H.
-  rewrite <- beq_nat_refl in H.
+  destruct m.
   inversion H.
+  inversion H0.
+  simpl.
+  intros.
+  destruct m.
+  inversion H0.
+  apply IHn with (m := m).
+  apply H.
+  inversion H0.
+  reflexivity.
 Qed.
 (** [] *)
 

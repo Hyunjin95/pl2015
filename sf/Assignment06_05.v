@@ -9,7 +9,8 @@ Require Export Assignment06_04.
 
 Inductive all {X : Type} (P : X -> Prop) : list X -> Prop :=
   | all_0 : all P []
-  | all_1 : forall (x:X) (l: list X), P x -> all P l -> all P (x::l).
+  | all_1 : forall (x:X) (l:list X), P x -> all P l -> all P (x::l)
+.
 
 (** Recall the function [forallb], from the exercise
     [forall_exists_challenge] in chapter [Poly]: *)
@@ -31,27 +32,32 @@ Theorem forallb_correct: forall X (P: X -> bool) l,
   forallb P l = true <-> all (fun x => P x = true) l.
 Proof.
   intros.
+  induction l.
+  simpl.
   split.
   intros.
-  induction l.
   apply all_0.
+  intros.
+  reflexivity.
+  simpl.
+  split.
+  intros.
   apply all_1.
-  simpl in H.
   apply andb_true_elim1 in H.
   apply H.
-  apply IHl.
-  simpl in H.
+  inversion IHl.
+  apply H0.
   apply andb_true_elim2 in H.
   apply H.
   intros.
-  induction H.
-  simpl.
-  reflexivity.
-  simpl.
-  rewrite H.
-  rewrite IHall.
-  simpl.
-  reflexivity.
+  inversion IHl.
+  apply andb_true_intro.
+  split.
+  inversion H.
+  apply H4.
+  apply H1.
+  inversion H.
+  apply H5.
 Qed.
 
 (** [] *)

@@ -14,11 +14,13 @@ Require Export Assignment05_02.
 
 Theorem iff_refl : forall P : Prop, 
   P <-> P.
-Proof. 
+Proof.
   intros.
   split.
-  auto.
-  auto.
+  intros.
+  apply H.
+  intros.
+  apply H.
 Qed.
 
 
