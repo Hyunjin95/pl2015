@@ -214,7 +214,10 @@ Proof.
 Theorem proj2 : forall P Q : Prop, 
   P /\ Q -> Q.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  inversion H.
+  apply H1.
+Qed.
 (** [] *)
 
 Theorem and_commut : forall P Q : Prop, 
@@ -283,12 +286,32 @@ Proof.
 Theorem iff_refl : forall P : Prop, 
   P <-> P.
 Proof. 
-  (* FILL IN HERE *) Admitted.
+  intros.
+  split.
+  intros.
+  apply H.
+  intros.
+  apply H.
+Qed.
 
 Theorem iff_trans : forall P Q R : Prop, 
   (P <-> Q) -> (Q <-> R) -> (P <-> R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  split.
+  intros.
+  inversion H.
+  inversion H0.
+  apply H4.
+  apply H2.
+  apply H1.
+  intros.
+  inversion H.
+  inversion H0.
+  apply H3.
+  apply H5.
+  apply H1.
+Qed.
 
 (** Hint: If you have an iff hypothesis in the context, you can use
     [inversion] to break it into two separate implications.  (Think
@@ -382,14 +405,54 @@ Proof.
 Theorem or_distributes_over_and_2 : forall P Q R : Prop,
   (P \/ Q) /\ (P \/ R) -> P \/ (Q /\ R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  inversion H.
+  inversion H0.
+  left.
+  apply H2.
+  inversion H1.
+  left.
+  apply H3.
+  right. 
+  split.
+  apply H2.
+  apply H3.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, optional (or_distributes_over_and)  *)
 Theorem or_distributes_over_and : forall P Q R : Prop,
   P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  split.
+  intros.
+  inversion H.
+  split.
+  left.
+  apply H0.
+  left.
+  apply H0.
+  split.
+  right.
+  inversion H0.
+  apply H1.
+  right.
+  inversion H0.
+  apply H2.
+  intros.
+  inversion H.
+  inversion H0.
+  left.
+  apply H2.
+  inversion H1.
+  left.
+  apply H3.
+  right.
+  split.
+  apply H2.
+  apply H3.
+Qed.
 (** [] *)
 
 (* ################################################### *)
@@ -427,19 +490,51 @@ Proof.
 Theorem andb_false : forall b c,
   andb b c = false -> b = false \/ c = false.
 Proof. 
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct b.
+  destruct c.
+  left.
+  inversion H.
+  right.
+  reflexivity.
+  left.
+  reflexivity.
+Qed.
 
 (** **** Exercise: 2 stars, optional (orb_false)  *)
 Theorem orb_prop : forall b c,
   orb b c = true -> b = true \/ c = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct b.
+  left.
+  reflexivity.
+  destruct c.
+  right.
+  reflexivity.
+  left.
+  inversion H.
+Qed.
 
 (** **** Exercise: 2 stars, optional (orb_false_elim)  *)
 Theorem orb_false_elim : forall b c,
   orb b c = false -> b = false /\ c = false.
 Proof. 
-  (* FILL IN HERE *) Admitted.
+  intros.
+  destruct b.
+  destruct c.
+  split.
+  inversion H.
+  inversion H.
+  split.
+  inversion H.
+  reflexivity.
+  split.
+  reflexivity.
+  destruct c.
+  inversion H.
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -575,14 +670,25 @@ Proof.
 Theorem contrapositive : forall P Q : Prop,
   (P -> Q) -> (~Q -> ~P).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not.
+  intros.
+  apply H0.
+  apply H.
+  apply H1.
+Qed.
+  
 (** [] *)
 
 (** **** Exercise: 1 star (not_both_true_and_false)  *)
 Theorem not_both_true_and_false : forall P : Prop,
   ~ (P /\ ~P).
 Proof. 
-  (* FILL IN HERE *) Admitted.
+  unfold not.
+  intros.
+  inversion H.
+  apply H1.
+  apply H0.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, advanced (informal_not_PNP)  *)
@@ -638,7 +744,15 @@ we would have both [~ (P \/ ~P)] and [~ ~ (P \/ ~P)], a contradiction. *)
 
 Theorem excluded_middle_irrefutable:  forall (P:Prop), ~ ~ (P \/ ~ P).  
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not.
+  intros.
+  apply H.
+  right.
+  intros.
+  apply H.
+  left.
+  apply H0.
+Qed.
 
 
 (* ########################################################## *)
@@ -682,15 +796,67 @@ Proof.
 Theorem false_beq_nat : forall n m : nat,
      n <> m ->
      beq_nat n m = false.
-Proof. 
-  (* FILL IN HERE *) Admitted.
+Proof.
+  unfold not.
+  induction n.
+  simpl.
+  intros.
+  destruct m.
+  apply ex_falso_quodlibet.
+  apply H.
+  reflexivity.
+  reflexivity.
+  simpl.
+  intros.
+  destruct m.
+  reflexivity.
+  apply IHn.
+  intros.
+  apply H.
+  rewrite H0.
+  reflexivity.
+Qed.
+  
+  
+  
 (** [] *)
 
 (** **** Exercise: 2 stars, optional (beq_nat_false)  *)
+
+Lemma beq_nat_false_sub0 : forall n,
+  beq_nat n (S n) = false.
+Proof.
+  intros.
+  induction n.
+  simpl.
+  reflexivity.
+  simpl.
+  apply IHn.
+Qed.
+
 Theorem beq_nat_false : forall n m,
   beq_nat n m = false -> n <> m.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not.
+  induction n.
+  intros.
+  destruct m.
+  inversion H.
+  inversion H0.
+  intros.
+  apply IHn with (m:= m).
+  destruct m.
+  inversion H0.
+  inversion H0.
+  apply beq_nat_false_sub0.
+  rewrite H0 in H.
+  rewrite <- beq_nat_refl in H.
+  inversion H.
+Qed.
+
+
+  
+  
 (** [] *)
 
 

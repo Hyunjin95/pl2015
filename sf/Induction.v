@@ -435,11 +435,9 @@ Theorem mult_mn : forall m n : nat,
   n * (S m) = n + n * m.
 Proof.
   intros m n.
-  generalize dependent m.
   induction n.
   auto.
   simpl.
-  intros m.
   rewrite IHn.
   rewrite plus_swap.
   auto.

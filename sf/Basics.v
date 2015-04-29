@@ -235,13 +235,13 @@ Proof. reflexivity.  Qed.
     its inputs are [false]. *)
 
 Definition nandb (b1:bool) (b2:bool) : bool :=
-  (* FILL IN HERE *) admit.
+  negb (andb b1 b2).
 
 (** Remove "[Admitted.]" and fill in each proof with 
     "[Proof. reflexivity. Qed.]" *)
 
 Example test_nandb1:               (nandb true false) = true.
-(* FILL IN HERE *) Admitted.
+  Proof. reflexivity. Qed.
 Example test_nandb2:               (nandb false false) = true.
 (* FILL IN HERE *) Admitted.
 Example test_nandb3:               (nandb false true) = true.

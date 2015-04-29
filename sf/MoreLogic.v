@@ -110,7 +110,12 @@ Qed.
 Theorem dist_not_exists : forall (X:Type) (P : X -> Prop),
   (forall x, P x) -> ~ (exists x, ~ P x).
 Proof. 
-  (* FILL IN HERE *) Admitted.
+  unfold not.
+  intros.
+  inversion H0.
+  apply H1.
+  apply H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, optional (not_exists_dist)  *)
@@ -122,7 +127,22 @@ Theorem not_exists_dist :
   forall (X:Type) (P : X -> Prop),
     ~ (exists x, ~ P x) -> (forall x, P x).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold not.
+  unfold excluded_middle.
+  intros.
+  assert ( P x \/ ~ P x).
+  apply H.
+  inversion H1.
+  apply H2.
+  unfold not in H2.
+  assert (False -> P x).
+  intros.
+  inversion H3.
+  apply H3.
+  apply H0.
+  exists x.
+  apply H2.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars (dist_exists_or)  *)
@@ -132,7 +152,28 @@ Proof.
 Theorem dist_exists_or : forall (X:Type) (P Q : X -> Prop),
   (exists x, P x \/ Q x) <-> (exists x, P x) \/ (exists x, Q x).
 Proof.
-   (* FILL IN HERE *) Admitted.
+   intros.
+   split.
+   intros.
+   inversion H.
+   inversion H0.
+   left.
+   exists witness.
+   apply H1.
+   right.
+   exists witness.
+   apply H1.
+   intros.
+   inversion H.
+   inversion H0.
+   exists witness.
+   left.
+   apply H1.
+   inversion H0.
+   exists witness.
+   right.
+   apply H1.
+Qed.
 (** [] *)
 
 (* ###################################################### *)
@@ -235,7 +276,12 @@ Proof.
 Theorem override_shadow' : forall (X:Type) x1 x2 k1 k2 (f : nat->X),
   (override' (override' f k1 x2) k1 x1) k2 = (override' f k1 x1) k2.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  unfold override'.
+  intros.
+  destruct (eq_nat_dec k1 k2) eqn:h0.
+  reflexivity.
+  reflexivity.
+Qed.
 (** [] *)
 
 
@@ -251,8 +297,8 @@ Proof.
     asserts that [P] is true for every element of the list [l]. *)
 
 Inductive all (X : Type) (P : X -> Prop) : list X -> Prop :=
-  (* FILL IN HERE *)
-.
+  | all_0 : all X P []
+  | all_1 : forall (x:X) (l: list X), P x -> all X P l -> all X P (x::l).
 
 (** Recall the function [forallb], from the exercise
     [forall_exists_challenge] in chapter [Poly]: *)
@@ -326,12 +372,47 @@ Inductive appears_in {X:Type} (a:X) : list X -> Prop :=
 Lemma appears_in_app : forall (X:Type) (xs ys : list X) (x:X), 
      appears_in x (xs ++ ys) -> appears_in x xs \/ appears_in x ys.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  induction xs.
+  simpl.
+  intros.
+  right.
+  apply H.
+  simpl.
+  intros.
+  inversion H.
+  left.
+  apply ai_here.
+  apply IHxs in H1.
+  inversion H1.
+  left.
+  apply ai_later.
+  apply H3.
+  right.
+  apply H3.
+Qed.
 
 Lemma app_appears_in : forall (X:Type) (xs ys : list X) (x:X), 
      appears_in x xs \/ appears_in x ys -> appears_in x (xs ++ ys).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction xs.
+  simpl.
+  inversion H.
+  inversion H0.
+  apply H0.
+  simpl.
+  inversion H.
+  inversion H0.
+  apply ai_here.
+  apply ai_later.
+  apply IHxs.
+  left.
+  apply H2.
+  apply ai_later.
+  apply IHxs.
+  right.
+  apply H0.
+Qed.
 
 
 (** Now use [appears_in] to define a proposition [disjoint X l1 l2],
@@ -368,7 +449,9 @@ Proof.
     does not stutter.) *)
 
 Inductive nostutter:  list nat -> Prop :=
- (* FILL IN HERE *)
+  | nost_0 : nostutter []
+  | nost_1 : forall (x: nat), nostutter [x]
+  | nost_2 : forall (x y:nat) (l: list nat), x <> y -> nostutter (y::l) -> nostutter (x::y::l)
 .
 
 (** Make sure each of these tests succeeds, but you are free
@@ -384,33 +467,21 @@ Inductive nostutter:  list nat -> Prop :=
     tactics.  *)
 
 Example test_nostutter_1:      nostutter [3;1;4;1;5;6].
-(* FILL IN HERE *) Admitted.
-(* 
   Proof. repeat constructor; apply beq_nat_false; auto. Qed.
-*)
 
-Example test_nostutter_2:  nostutter [].
-(* FILL IN HERE *) Admitted.
-(* 
+Example test_nostutter_2:  nostutter []. 
   Proof. repeat constructor; apply beq_nat_false; auto. Qed.
-*)
 
 Example test_nostutter_3:  nostutter [5].
-(* FILL IN HERE *) Admitted.
-(* 
   Proof. repeat constructor; apply beq_nat_false; auto. Qed.
-*)
 
 Example test_nostutter_4:      not (nostutter [3;1;1;4]).
-(* FILL IN HERE *) Admitted.
-(* 
   Proof. intro.
   repeat match goal with 
     h: nostutter _ |- _ => inversion h; clear h; subst 
   end.
   contradiction H1; auto. Qed.
-*)
-(** [] *)
+
 
 (** **** Exercise: 4 stars, advanced (pigeonhole principle)  *)
 (** The "pigeonhole principle" states a basic fact about counting:
@@ -425,20 +496,42 @@ Example test_nostutter_4:      not (nostutter [3;1;1;4]).
 Lemma app_length : forall (X:Type) (l1 l2 : list X),
   length (l1 ++ l2) = length l1 + length l2. 
 Proof. 
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction l1.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHl1.
+  reflexivity.
+Qed.
 
 Lemma appears_in_app_split : forall (X:Type) (x:X) (l:list X),
   appears_in x l -> 
   exists l1, exists l2, l = l1 ++ (x::l2).
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros.
+  induction H.
+  exists [].
+  exists l.
+  simpl.
+  reflexivity.
+  inversion IHappears_in.
+  inversion H0.
+  rewrite H1.
+  exists (b::witness).
+  exists witness0.
+  simpl.
+  reflexivity.
+Qed.
+  
 
 (** Now define a predicate [repeats] (analogous to [no_repeats] in the
    exercise above), such that [repeats X l] asserts that [l] contains
    at least one repeated element (of type [X]).  *)
 
 Inductive repeats {X:Type} : list X -> Prop :=
-  (* FILL IN HERE *)
+  | rep_0 : forall (x:X) (l:list X), appears_in x l -> repeats (x::l)
+  | rep_1 : forall (x:X) (l:list X), repeats l -> repeats (x::l)
 .
 
 (** Now here's a way to formalize the pigeonhole principle. List [l2]
@@ -452,6 +545,32 @@ Inductive repeats {X:Type} : list X -> Prop :=
     [appears_in] is decidable; if you can manage to do this, you will
     not need the [excluded_middle] hypothesis. *)
 
+Lemma length_plus_1 {X:Type}: forall (l1: list X) (l2:list X),
+  length l1 + S (length l2) = S (length l1 + length l2).
+Proof.
+  intros.
+  induction l1.
+  simpl.
+  reflexivity.
+  simpl.
+  rewrite IHl1.
+  reflexivity.
+Qed.
+
+Lemma appears_in_1 {X:Type}: forall (x0: X) (x: X) (lst:list X),
+  appears_in x0 (x::lst) -> x <> x0 -> appears_in x0 lst.
+Proof.
+  intros.
+  unfold not in H0.
+  inversion H.
+  assert ( x = x0).
+  rewrite H2.
+  reflexivity.
+  apply H0 in H1.
+  inversion H1.
+  apply H2.
+Qed.
+
 Theorem pigeonhole_principle: forall (X:Type) (l1  l2:list X), 
    excluded_middle -> 
    (forall x, appears_in x l1 -> appears_in x l2) -> 
@@ -459,7 +578,56 @@ Theorem pigeonhole_principle: forall (X:Type) (l1  l2:list X),
    repeats l1.  
 Proof.
    intros X l1. induction l1 as [|x l1'].
-  (* FILL IN HERE *) Admitted.
+   simpl.
+   intros.
+   inversion H1.
+   simpl.
+   intros.
+   assert ( appears_in x l1' \/ ~ appears_in x l1').
+   apply H.
+   inversion H2.
+   apply rep_0.
+   apply H3.
+   apply rep_1.
+   assert (appears_in x (x :: l1')).
+   apply ai_here.
+   apply H0 in H4.
+   apply appears_in_app_split in H4.
+   inversion H4.
+   inversion H5.
+   rewrite H6 in H1.
+   rewrite app_length in H1.
+   simpl in H1.
+   rewrite length_plus_1 in H1.
+   apply Sn_le_Sm__n_le_m in H1.
+   assert ( (length witness + length witness0) < length l1').
+   unfold lt.
+   apply H1.
+   rewrite <- app_length in H7.
+   rewrite H6 in H0.
+   apply IHl1' with (l2 := (witness ++ witness0)).
+   apply H.
+   intros.
+   assert (appears_in x0 l1').
+   apply H8.
+   apply ai_later with (b := x) in H8.
+   apply H0 in H8.
+   apply app_appears_in.
+   apply appears_in_app in H8.
+   inversion H8.
+   left.
+   apply H10.
+   apply appears_in_1 in H10.
+   right.
+   apply H10.
+   unfold not.
+   intros.
+   unfold not in H3.
+   rewrite H11 in H3.
+   apply H3 in H9.
+   inversion H9.
+   apply H7.
+Qed.
 (** [] *)
 
 (* FILL IN HERE *)
