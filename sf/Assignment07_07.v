@@ -9,7 +9,10 @@ Require Export Assignment07_06.
 Theorem update_example : forall (n:nat),
   (update empty_state (Id 2) n) (Id 3) = 0.
 Proof.
-  (* FILL IN HERE *) admit.
+  unfold update.
+  unfold empty_state.
+  intros.
+  constructor.
 Qed.
 (** [] *)
 

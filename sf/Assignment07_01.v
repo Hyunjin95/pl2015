@@ -12,12 +12,76 @@ Require Export Assignment07_00.
     as elegant as possible. *)
 
 Fixpoint optimize_0plus_b (b : bexp) : bexp :=
-  (* FILL IN HERE *) admit.
+  match b with
+  | BTrue => BTrue
+  | BFalse => BFalse
+  | BEq a1 a2 => BEq (optimize_0plus a1) (optimize_0plus a2)
+  | BLe a1 a2 => BLe (optimize_0plus a1) (optimize_0plus a2)
+  | BNot b1 => BNot (optimize_0plus_b b1)
+  | BAnd b1 b2 => BAnd (optimize_0plus_b b1) (optimize_0plus_b b2)
+  end.
+
+Lemma optimize_0plus_sound : forall a,
+  aeval (optimize_0plus a) = aeval a.
+Proof.
+  intros.
+  induction a.
+  reflexivity.
+  simpl.
+  destruct a1.
+  destruct n.
+  simpl.
+  rewrite IHa2.
+  reflexivity.
+  simpl.
+  simpl in IHa1.
+  rewrite IHa2.
+  reflexivity.
+  simpl.
+  simpl in IHa1.
+  rewrite IHa1.
+  rewrite IHa2.
+  reflexivity.
+  simpl in *.
+  rewrite IHa1.
+  rewrite IHa2.
+  reflexivity.
+  simpl in *.
+  rewrite IHa1.
+  rewrite IHa2.
+  reflexivity.
+  simpl in *.
+  rewrite IHa1.
+  rewrite IHa2.
+  reflexivity.
+  simpl in *.
+  rewrite IHa1.
+  rewrite IHa2.
+  reflexivity.
+Qed.
+
 
 Theorem optimize_0plus_b_sound : forall b,
   beval (optimize_0plus_b b) = beval b.
 Proof.
-  (* FILL IN HERE *) admit.
+  intros.
+  induction b.
+  reflexivity.
+  reflexivity.
+  simpl.
+  rewrite 2 optimize_0plus_sound.
+  reflexivity.
+  simpl.
+  rewrite 2 optimize_0plus_sound.
+  reflexivity.
+  simpl.
+  rewrite IHb.
+  reflexivity.
+  simpl.
+  rewrite IHb1.
+  rewrite IHb2.
+  reflexivity.
 Qed.
+
 (** [] *)
 
