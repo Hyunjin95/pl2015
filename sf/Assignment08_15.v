@@ -5,6 +5,22 @@ Require Export Assignment08_14.
 (** **** Exercise: 3 stars (fold_constants_com_sound)  *)
 (** Complete the [WHILE] case of the following proof. *)
 
+Lemma WHILE_false : forall b c,
+     bequiv b BFalse ->
+     cequiv
+       (WHILE b DO c END)
+       SKIP.
+Proof.
+  intros b c Hb. split; intros H.
+    inversion H; subst.
+      apply E_Skip.
+      rewrite Hb in H2. inversion H2.
+    inversion H; subst.
+    apply E_WhileEnd.
+    rewrite Hb.
+    reflexivity.
+Qed.
+
 Theorem fold_constants_com_sound : 
   ctrans_sound fold_constants_com.
 Proof. 
@@ -32,7 +48,14 @@ Proof.
       apply trans_cequiv with c2; try assumption.
       apply IFB_false; assumption.
   Case "WHILE".
-    exact FILL_IN_HERE.
+    assert (bequiv b (fold_constants_bexp b)).
+      apply fold_constants_bexp_sound.
+    remember (fold_constants_bexp b) as b'.
+    destruct b'; try (apply CWhile_congruence; assumption).
+    apply WHILE_true.
+    apply H.
+    apply WHILE_false.
+    apply H.
 Qed.
 
 (*-- Check --*)

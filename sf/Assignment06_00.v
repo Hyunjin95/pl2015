@@ -1,6 +1,7 @@
 
 Require Export "Prop".
 
+
 (* Important: 
    - You are NOT allowed to use the [admit] tactic
      because [admit] simply admits any goal 
@@ -50,4 +51,3 @@ Defined.
 
 Definition override' {X: Type} (f: nat->X) (k:nat) (x:X) : nat->X:=
   fun (k':nat) => if eq_nat_dec k k' then x else f k'.
-
