@@ -5,7 +5,12 @@ Require Export Assignment08_16.
 Lemma optimize_0plus_bexp_sound:
   btrans_sound optimize_0plus_bexp.
 Proof.
-  exact FILL_IN_HERE.
+  intros b st.
+  induction b; try simpl in *; try reflexivity.
+  rewrite <- 2 optimize_0plus_aexp_sound. reflexivity.
+  rewrite <- 2 optimize_0plus_aexp_sound. reflexivity.
+  rewrite IHb. reflexivity.
+  rewrite IHb1. rewrite IHb2. reflexivity.
 Qed.
 
 (*-- Check --*)
