@@ -8,34 +8,29 @@ Lemma par_body_n : forall n st,
   exists st',
     par_loop / st ==>c*  par_loop / st' /\ st' X = n /\ st' Y = 0.
 Proof.
-  unfold par_loop.
-  induction n;
   intros.
+  inversion H.
+  induction n.
   exists st.
   split.
   apply multi_refl.
   apply H.
-  assert (exists st' : state,
-        (par_loop / st ==>c* par_loop / st') /\ (st' X = n /\ st' Y = 0)).
-  apply IHn.
-  apply H.
-  inversion H0.
+  inversion IHn. clear IHn.
+  inversion H2. clear H2.
+  inversion H4.
   exists (update x X (S n)).
-  split;
-  inversion H1.
-  eapply multi_trans.
-  apply H2.
-  eapply par_body_n__Sn.
-  apply H3.
   split.
-  rewrite update_eq.
+  apply par_body_n__Sn in H4.
+  eapply multi_trans.
+  apply H3.
+  apply H4.
+  split.
+  unfold update.
+  simpl.
   reflexivity.
-  rewrite update_neq.
-  inversion H3.
+  unfold update.
+  simpl.
   apply H5.
-  destruct (eq_id_dec X Y) eqn:xy.
-  inversion xy.
-  apply n0.
 Qed.
 
 (*-- Check --*)
