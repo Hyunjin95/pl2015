@@ -87,7 +87,6 @@ Proof.
   simpl. reflexivity. inversion HASTY.
   simpl. inversion HASTY; subst.
   apply IHt1 in H2. apply IHt2 in H4. apply IHt3 in H5.
-  SearchAbout andb.
   rewrite H2. rewrite H4. rewrite H5. simpl. reflexivity.
   inversion HASTY; subst.
   apply IHt1 in H2. apply IHt2 in H4. apply IHt3 in H5.
