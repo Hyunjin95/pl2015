@@ -17,7 +17,21 @@ Theorem subject_expansion_false:
     |- t' \in T /\
     ~ |- t \in T.
 Proof.
-  exact FILL_IN_HERE.
+  unfold not.
+  exists (tif ttrue (tif tfalse ttrue tfalse) tzero).
+  exists (tif tfalse ttrue tfalse).
+  exists TBool.
+  split.
+  constructor.
+  split.
+  constructor.
+  constructor.
+  constructor.
+  constructor.
+  intros.
+  inversion H; subst.
+  inversion H5; subst.
+  inversion H6.
 Qed.
 
 (*-- Check --*)

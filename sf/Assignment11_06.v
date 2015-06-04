@@ -25,11 +25,22 @@ Proof with auto.
     SCase "ST_IfFalse". assumption.
     SCase "ST_If". apply T_If; try assumption.
       apply IHHT1; assumption.
-      exact FILL_IN_HERE.
+      inversion HE; subst.
+      constructor.
+      apply IHHT in H0.
+      apply H0.
   Case "T_Pred".
-    exact FILL_IN_HERE.
+    inversion HE; subst.
+    apply HT.
+    apply succ_hastype_nat__hastype_nat in HT.
+    apply HT.
+    constructor. apply IHHT. apply H0.
+    inversion HE; subst.
+    constructor. constructor.
   Case "T_Iszero".
-    exact FILL_IN_HERE.
+    constructor.
+    apply IHHT.
+    apply H0.
 Qed.
 
 (*-- Check --*)
