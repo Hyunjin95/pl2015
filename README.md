@@ -1,4 +1,4 @@
-# SNU 4190.310, 2015 Spring #
+# SNU 4190.310, Spring 2015 #
 
 - Instructor: Prof. [Gil Hur](http://sf.snu.ac.kr/gil.hur)
 - TA: [Jeehoon Kang](http://sf.snu.ac.kr/jeehoon.kang)
